@@ -1,16 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.dfaminimization.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.dfaminimization.ui.MainWindowController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+   <children>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <RadioButton fx:id="mooreRadioButton" mnemonicParsing="false" selected="true" text="Moore">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="machineSelection" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="mealyRadioButton" mnemonicParsing="false" text="Mealy" toggleGroup="$machineSelection" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Input Alphanet">
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </Text>
+                  <TextField fx:id="inputAlphabetTextField" promptText="{A,B}" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Output Alphabet">
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </Text>
+                  <TextField fx:id="outputAlphabetTextField" promptText="{0,1}" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="# States" />
+                  <TextField fx:id="numberOfStatesTextField" promptText="5" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClearButtonClick" text="Clear">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="saveButton" mnemonicParsing="false" onAction="#onSaveButtonClick" text="Save">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <TableView fx:id="originalMachineTable" prefHeight="200.0" prefWidth="200.0" />
+      <HBox alignment="CENTER" prefHeight="35.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="createMachineButton" mnemonicParsing="false" onAction="#onCreateMachineButtonClick" text="Create">
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="minimizeButton" disable="true" mnemonicParsing="false" onAction="#onMinimizeButtonClick" text="Minimize">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <TableView fx:id="minimizedMachineTable" prefHeight="200.0" prefWidth="200.0" />
+   </children>
 </VBox>

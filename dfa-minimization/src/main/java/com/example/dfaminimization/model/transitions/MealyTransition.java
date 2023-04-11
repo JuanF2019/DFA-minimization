@@ -4,10 +4,9 @@ import com.example.dfaminimization.model.states.MealyState;
 import com.example.dfaminimization.model.states.MooreState;
 
 public class MealyTransition extends Transition{
-    String output;
+    public String output;
 
-    public MealyTransition (String input, MealyState stateTo, String output){
-        this.input = input;
+    public MealyTransition (MealyState stateTo, String output){
         this.nextState = stateTo;
         this.output = output;
     }

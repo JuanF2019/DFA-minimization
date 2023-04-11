@@ -2,17 +2,17 @@ package com.example.dfaminimization.model.DFA;
 
 import com.example.dfaminimization.model.states.State;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Set;
 
 public abstract class Machine {
 
-    HashSet<String> inputAlphabet;
-    HashSet<String> outputAlphabet;
-    public ArrayList<State> states;
+    public Set<String> inputAlphabet;
+    public Set<String> outputAlphabet;
+
+    public Set<State> states;
     public State startState;
 
-    State findStateById(String id){
+    public State findStateById(String id){
         for (State s: states){
            if (s.getId().equals(id)) return s;
         }

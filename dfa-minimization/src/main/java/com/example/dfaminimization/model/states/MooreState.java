@@ -6,12 +6,17 @@ public class MooreState extends State{
 
     String output;
 
-    public MooreState(String id, String output) {
+    public MooreState(String id, String output, String name) {
         this.id = id;
         this.output = output;
+        this.name = name;
     }
 
     public void addTransition(String input, MooreState stateTo) {
-        transitions.add(new MooreTransition(input,stateTo));
+        transitions.put(input, new MooreTransition(stateTo));
+    }
+
+    public String getOutput() {
+        return output;
     }
 }

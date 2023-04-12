@@ -1,9 +1,7 @@
 package com.example.dfaminimization.model.DFA;
 
 import com.example.dfaminimization.model.states.MooreState;
-import com.example.dfaminimization.model.states.State;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,7 +16,7 @@ public class MooreMachine extends Machine{
 
     public void addStartState(String id, String output, String name) {
         this.startState = new MooreState(id,output,name);
-        this.startState.name = name;
+        this.startState.setName(name);
         states.add(startState);
     }
 

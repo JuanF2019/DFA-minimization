@@ -18,7 +18,32 @@ public class Group {
 
     @Override
     public boolean equals(Object otherGroup){
-        return this.states.equals(((Group) otherGroup).states);
+
+        if(this == otherGroup)
+            return true;
+
+        if(otherGroup == null)
+            return false;
+
+        if(otherGroup instanceof Group) {
+
+            return this.states.equals(((Group) otherGroup).states);
+        }
+        else{
+            return false;
+        }
+    }
+
+    public String toString(){
+        StringBuilder string = new StringBuilder("{id=" + id + ", states={");
+
+        for(State s: states){
+            string.append(s.getName());
+        }
+
+        string.append("}}");
+
+        return string.toString();
     }
 
 }

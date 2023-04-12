@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="550.0" spacing="10.0" style="-fx-background-color: f2f2f2;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.dfaminimization.ui.MainWindowController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+   <children>
+      <HBox alignment="BOTTOM_CENTER" prefHeight="40.0" prefWidth="502.0" spacing="30.0">
+         <children>
+            <VBox alignment="BOTTOM_LEFT" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Input Alphabet">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <TextField fx:id="inputAlphabetTextField" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="120.0" promptText="A,B">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </VBox>
+            <VBox alignment="BOTTOM_LEFT" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Output Alphabet">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <TextField fx:id="outputAlphabetTextField" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="120.0" promptText="0,1">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </VBox>
+            <VBox alignment="BOTTOM_LEFT" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="# States">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <TextField fx:id="numberOfStatesTextField" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="100.0" promptText="5">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </VBox>
+            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#onSaveButtonClick" style="-fx-background-color: #28a745;" text="Save" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="13.0" prefWidth="502.0" spacing="20.0">
+         <children>
+            <RadioButton fx:id="mooreRadioButton" mnemonicParsing="false" selected="true" text="Moore">
+               <toggleGroup>
+                  <ToggleGroup fx:id="machineSelection" />
+               </toggleGroup>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </RadioButton>
+            <RadioButton fx:id="mealyRadioButton" mnemonicParsing="false" text="Mealy" toggleGroup="$machineSelection">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </RadioButton>
+         </children>
+      </HBox>
+      <Label text="State Table">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <TableView fx:id="originalMachineTable" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f9f9f9;" />
+      <HBox alignment="CENTER" prefHeight="35.0" prefWidth="200.0" spacing="20.0">
+         <children>
+            <Button fx:id="clearButton" mnemonicParsing="false" onAction="#onClearButtonClick" style="-fx-background-color: #dc3545;" text="Clear" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="createMachineButton" mnemonicParsing="false" onAction="#onCreateMachineButtonClick" style="-fx-background-color: #17a2b8;" text="Create Machine" textFill="WHITE">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <font>
+                  <Font name="Segoe UI Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="minimizeButton" disable="true" mnemonicParsing="false" onAction="#onMinimizeButtonClick" style="-fx-background-color: #007bff;" text="Minimize" textFill="WHITE">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+      <Label text="State Table (Minimized)">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <TableView fx:id="minimizedMachineTable" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f9f9f9;" />
+   </children>
+</VBox>

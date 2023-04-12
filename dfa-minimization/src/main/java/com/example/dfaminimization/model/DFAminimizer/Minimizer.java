@@ -12,13 +12,23 @@ import java.util.*;
 
 public class Minimizer {
 
-    public static Machine minimize (Machine machine){
+    public static Machine minimize (Machine machine) {
+
+        System.out.println("Check 0");
 
         removeInaccessibleStates(machine);
 
+        System.out.println("Check 1");
+
         Set<Group> partition = mergeRedundantStates(machine);
 
-        return reconstructMachine(machine, partition);
+        System.out.println("Check 2");
+
+        Machine minimizedMachine = reconstructMachine(machine, partition);
+
+        System.out.println("Check 3");
+
+        return minimizedMachine;
     }
 
     //Checks for inaccessible states from the start state using the BFS algorithm to traverse the machine
@@ -42,19 +52,22 @@ public class Minimizer {
                 State stateTo = t.nextState;
 
                 if(!visitedStates.containsKey(stateTo.getId())){
+
                     pendingStatesQueue.add(stateTo);
-                    visitedStates.put(currentState.getId(),currentState);
+                    visitedStates.put(stateTo.getId(),stateTo);
                 }
             }
         }
 
         //Sets the states of the machine as only the visited states during traversal
+
         machine.states = new HashSet<>(visitedStates.values());
     }
 
     private static Set<Group> initialPartition(Machine machine){
 
         Set<State> machineStates = machine.states;
+
         Set<Group> groupsK = new HashSet<>();
         int idCounter = 0;
 
@@ -64,6 +77,7 @@ public class Minimizer {
                 MooreState ms = (MooreState) s;
 
                 if(groupsK.isEmpty()){
+
                     String groupId = ms.getOutput(); //Id is output value
                     ms.groupId = groupId;
 
@@ -72,6 +86,7 @@ public class Minimizer {
                     groupsK.add(firstGroup);
                 }
                 else{
+
                     boolean stateGrouped = false;
                     for(Group mg : groupsK){
                         if(mg.id.equals(ms.getOutput())){
@@ -85,6 +100,7 @@ public class Minimizer {
                     }
 
                     if(!stateGrouped){
+
                         String groupId = ms.getOutput(); //Id is output value
                         ms.groupId = groupId;
 
@@ -109,7 +125,7 @@ public class Minimizer {
                     for(String inputSymbol : inputAlphabet){
                         //Both states contain or not a transition for an input symbol
                         if(state.transitions.containsKey(inputSymbol) == testState.transitions.containsKey(inputSymbol)){
-                            //If both states contain the transition then they are equal if the transitions for symbol i have the same output
+                            //If both states contain the transition then they are equal if the transitions for symbol 'i' have the same output
                             if(state.transitions.containsKey(inputSymbol)){
 
                                 String stateTransitionOutput = ((MealyTransition) state.transitions.get(inputSymbol)).output;
@@ -153,28 +169,77 @@ public class Minimizer {
         return groupsK;
     }
 
+    private static boolean partitionsAreEqual(Set<Group> groupsK, Set<Group> groupsKPlusOne){
+
+        boolean partitionsAreEqual = true;
+
+        if(groupsK.isEmpty()) return false;
+        if(groupsK.size() != groupsKPlusOne.size()) return false;
+
+        for(Group groupK : groupsK){
+            if(!groupIsInPartition(groupK,groupsKPlusOne)) {
+                partitionsAreEqual = false;
+                break;
+            }
+
+        }
+
+        return partitionsAreEqual;
+    }
+
+    private static boolean groupIsInPartition (Group group, Set<Group> partition){
+
+        boolean foundGroup = true;
+
+        for(Group partitionGroup : partition){
+
+            foundGroup = true;
+
+            if(partitionGroup.states.size() != group.states.size()){
+                foundGroup = false;
+                continue;
+            }
+
+            for (State state: group.states) {
+
+                if (!partitionGroup.states.contains(state)) {
+                    foundGroup = false;
+                    break;
+                }
+
+            }
+
+            if(foundGroup) break;
+        }
+
+        return foundGroup;
+    }
 
     private static Set<Group> mergeRedundantStates(Machine machine) {
 
-        Set<Group> groupsK = initialPartition(machine);
-        Set<Group> groupsKPlusOne = new HashSet<>();
+        Set<Group> groupsKPlusOne = initialPartition(machine);
 
+        Set<Group> groupsK = new HashSet<>();
 
-        while (!groupsK.equals(groupsKPlusOne)) {
+        while (!partitionsAreEqual(groupsK,groupsKPlusOne)) {
 
+            groupsK = groupsKPlusOne;
+            groupsKPlusOne = new HashSet<>();
 
             int idCounter = 0;
 
             for (Group currentGroupK : groupsK) {
-                for (State currentStateK : currentGroupK.states) {
-                    if (groupsKPlusOne.isEmpty()) {
 
+                for (State currentStateK : currentGroupK.states) {
+
+                    if (groupsKPlusOne.isEmpty()) {
                         String newGroupId = Integer.toString(idCounter++);
                         Group newGroup = new Group(newGroupId);
-                        currentStateK.groupId = newGroupId;
+                        currentStateK.groupIdKPlusOne = newGroupId;
 
                         newGroup.states.add(currentStateK);
                         groupsKPlusOne.add(newGroup);
+
                     } else {
                         boolean stateGrouped = false;
 
@@ -213,7 +278,7 @@ public class Minimizer {
                             if (statesAreEqual) {
 
                                 currentGroupKPlus1.states.add(currentStateK);
-                                currentStateK.groupId = currentGroupKPlus1.id;
+                                currentStateK.groupIdKPlusOne = currentGroupKPlus1.id;
 
                                 stateGrouped = true;
                                 break;
@@ -224,19 +289,19 @@ public class Minimizer {
                         if (!stateGrouped) {
                             String newGroupId = Integer.toString(idCounter++);
                             Group newGroup = new Group(newGroupId);
-                            currentStateK.groupId = newGroupId;
+                            currentStateK.groupIdKPlusOne = newGroupId;
 
                             newGroup.states.add(currentStateK);
                             groupsKPlusOne.add(newGroup);
                         }
-
-
                     }
                 }
             }
-
+            for (State state: machine.states) {
+                state.setupNextPartition();
+            }
         }
-        return groupsK;
+        return groupsKPlusOne;
     }
 
     static Machine reconstructMachine(Machine machine, Set<Group> partition){
@@ -252,20 +317,16 @@ public class Minimizer {
 
             for (Group group : partition){
 
-                String id = Character.toString(idCounter);
+                String newStateId = Character.toString(idCounter);
                 String name = constructNewStateName(group);
 
+                if(group.states.contains(machine.startState))
+                    ((MealyMachine) minimizedMachine).addStartState(newStateId,name);
+                else
+                    ((MealyMachine) minimizedMachine).addState(newStateId,name);
 
-                if(group.states.contains(machine.startState)){
 
-                    ((MealyMachine) minimizedMachine).addStartState(id,name);
-                }
-                else{
-
-                    ((MealyMachine) minimizedMachine).addState(id,name);
-                }
-
-                groupIdToNewState.put(group.states.iterator().next().groupId, minimizedMachine.findStateById(id));
+                groupIdToNewState.put(group.states.iterator().next().groupId, minimizedMachine.findStateById(newStateId));
 
                 idCounter++;
             }
@@ -291,24 +352,23 @@ public class Minimizer {
                     }
                 }
             }
-
         }
         else{
             minimizedMachine = new MooreMachine(machine.inputAlphabet,machine.outputAlphabet);
 
             for (Group group : partition){
-                String id = Character.toString(idCounter);
-
+                String newStateId = Character.toString(idCounter);
                 String name = constructNewStateName(group);
+
                 MooreState sampleState = (MooreState) group.states.iterator().next();
                 String output = sampleState.getOutput();
 
                 if(group.states.contains(machine.startState))
-                    ((MooreMachine) minimizedMachine).addStartState(id, output, name);
+                    ((MooreMachine) minimizedMachine).addStartState(newStateId, output, name);
                 else
-                    ((MooreMachine) minimizedMachine).addState(id, output, name);
+                    ((MooreMachine) minimizedMachine).addState(newStateId, output, name);
 
-                groupIdToNewState.put(sampleState.groupId, minimizedMachine.findStateById(id));
+                groupIdToNewState.put(sampleState.groupId, minimizedMachine.findStateById(newStateId));
 
                 idCounter++;
             }
@@ -335,7 +395,6 @@ public class Minimizer {
                 }
             }
         }
-
         return minimizedMachine;
     }
 
@@ -348,10 +407,6 @@ public class Minimizer {
             builder.append(state.getId());
         }
 
-        builder.append(" }");
-        builder.replace(1,2, "");
-
-        return builder.toString();
+        return builder.toString().replaceFirst(",","");
     }
-
 }

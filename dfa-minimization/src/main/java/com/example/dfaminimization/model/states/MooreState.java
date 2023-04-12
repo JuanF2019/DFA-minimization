@@ -7,9 +7,8 @@ public class MooreState extends State{
     String output;
 
     public MooreState(String id, String output, String name) {
-        this.id = id;
+        super(id,name);
         this.output = output;
-        this.name = name;
     }
 
     public void addTransition(String input, MooreState stateTo) {
@@ -18,5 +17,25 @@ public class MooreState extends State{
 
     public String getOutput() {
         return output;
+    }
+
+    public String toString(){
+        return "{id="+ this.getId() + " , groupId = " + groupId + " , name =" + this.getName() + " , output=" + output + " , transitions=" + transitions.toString() + "}";
+    }
+
+    @Override
+    public boolean equals(Object anotherState){
+
+        if(this == anotherState)
+            return true;
+
+        if(anotherState == null)
+            return false;
+
+        if(anotherState instanceof MooreState)
+            return this.getId().equals(((MooreState) anotherState).getId());
+        else
+            return false;
+
     }
 }

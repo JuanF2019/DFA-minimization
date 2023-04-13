@@ -400,12 +400,14 @@ public class Minimizer {
 
     private static String constructNewStateName(Group group){
 
-        StringBuilder builder = new StringBuilder("{ ");
+        StringBuilder builder = new StringBuilder("{");
 
         for(State state : group.states){
             builder.append(", ");
             builder.append(state.getId());
         }
+
+        builder.append("}");
 
         return builder.toString().replaceFirst(",","");
     }

@@ -4,22 +4,17 @@ import com.example.dfaminimization.model.DFA.Machine;
 import com.example.dfaminimization.model.DFA.MealyMachine;
 import com.example.dfaminimization.model.DFA.MooreMachine;
 import com.example.dfaminimization.model.DFAminimizer.Minimizer;
-import com.example.dfaminimization.model.states.MealyState;
 import com.example.dfaminimization.model.states.MooreState;
 import com.example.dfaminimization.model.states.State;
 import com.example.dfaminimization.model.transitions.MealyTransition;
 import com.example.dfaminimization.model.transitions.Transition;
-import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.*;
@@ -76,92 +71,20 @@ public class MainWindowController {
     @FXML
     private TextField outputAlphabetTextField;
 
-
+    /**
+     * Clears all the fields and tables
+     * @param event Clear button click event
+     */
     @FXML
     void onClearButtonClick(ActionEvent event) {
-
-        testMachine();
-
-
-
     }
 
-    private Machine testMachine2(){
-        Set<String> inputAlphabet = new HashSet<>();
-        inputAlphabet.add("0");
-        inputAlphabet.add("1");
-
-        Set<String> outputAlphabet = new HashSet<>();
-        inputAlphabet.add("0");
-        inputAlphabet.add("1");
-
-        MealyMachine machine = new MealyMachine(inputAlphabet,outputAlphabet);
-
-        machine.addStartState("A","A");
-        machine.addState("B","B");
-        machine.addState("C","C");
-        machine.addState("D","D");
-        machine.addState("E","E");
-        machine.addState("F","F");
-        machine.addState("G","G");
-
-        machine.addTransition("0","A","F","0");
-        machine.addTransition("1","A","B","1");
-        machine.addTransition("0","B","G","0");
-        machine.addTransition("1","B","A","1");
-        machine.addTransition("0","C","B","0");
-        machine.addTransition("1","C","C","1");
-        machine.addTransition("0","D","C","0");
-        machine.addTransition("1","D","B","1");
-        machine.addTransition("0","E","D","0");
-        machine.addTransition("1","E","A","1");
-        machine.addTransition("0","F","E","1");
-        machine.addTransition("1","F","F","1");
-        machine.addTransition("0","G","E","1");
-        machine.addTransition("1","G","G","1");
-
-        return (machine);
-    }
-
-    private Machine testMachine(){
-
-        Set<String> inputAlphabet = new HashSet<>();
-        inputAlphabet.add("0");
-        inputAlphabet.add("1");
-
-        Set<String> outputAlphabet = new HashSet<>();
-        inputAlphabet.add("0");
-        inputAlphabet.add("1");
-
-        MooreMachine machine = new MooreMachine(inputAlphabet,outputAlphabet);
-
-        machine.addStartState("q0","0","q0");
-        machine.addState("q1","0","q1");
-        machine.addState("q2","0","q2");
-        machine.addState("q3","1","q3");
-        machine.addState("q4","0","q4");
-        machine.addState("q5","1","q5");
-
-        machine.addTransition("0","q0","q1");
-        machine.addTransition("1","q0","q3");
-        machine.addTransition("0","q1","q0");
-        machine.addTransition("1","q1","q3");
-        machine.addTransition("0","q2","q1");
-        machine.addTransition("1","q2","q4");
-        machine.addTransition("0","q3","q5");
-        machine.addTransition("1","q3","q5");
-        machine.addTransition("0","q4","q3");
-        machine.addTransition("1","q4","q3");
-        machine.addTransition("0","q5","q5");
-        machine.addTransition("1","q5","q5");
-
-
-
-        return (machine);
-    }
-
+    /**
+     * Executes the minimization algorithm on the machine given by the user.
+     * @param event the minimize button click event
+     */
     @FXML
-    void onMinimizeButtonClick(ActionEvent event) throws InterruptedException {
+    void onMinimizeButtonClick(ActionEvent event) {
 
         minimizedMachineTable.getItems().clear();
 
@@ -177,9 +100,7 @@ public class MainWindowController {
         minimizedMachineTable.setItems(states);
 
         TableColumn<State, String> stateColumn = new TableColumn<>("State");
-        stateColumn.setCellValueFactory(cellDataFeatures -> {
-                return new SimpleStringProperty(cellDataFeatures.getValue().getName());
-        } );
+        stateColumn.setCellValueFactory(cellDataFeatures -> new SimpleStringProperty(cellDataFeatures.getValue().getName()));
         minimizedMachineTable.getColumns().add(stateColumn);
 
         if(isMoore){
@@ -253,6 +174,10 @@ public class MainWindowController {
 
     }
 
+    /**
+     * Initializes the table representing the original machine given the user inputs. (Input and output alphabets, number of states, machine type)
+     * @param event the save button click event
+     */
     @FXML
     void onSaveButtonClick(ActionEvent event) {
 
@@ -356,8 +281,12 @@ public class MainWindowController {
         }
     }
 
-    //This method takes the value selected by the user for the states transitions and outputs
-    //And converts it to an instance of the corresponding type of Machine
+    /**
+     * This method takes the value selected by the user for the states transitions and outputs
+     * And converts it to an instance of the corresponding type of Machine @param event
+     * @param event The create machine button click event
+     */
+
     @FXML
     void onCreateMachineButtonClick(ActionEvent event) {
 

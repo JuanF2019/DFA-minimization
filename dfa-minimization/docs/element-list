@@ -1,0 +1,7 @@
+module:com.example.dfaminimization
+com.example.dfaminimization
+com.example.dfaminimization.model.DFA
+com.example.dfaminimization.model.DFAminimizer
+com.example.dfaminimization.model.states
+com.example.dfaminimization.model.transitions
+com.example.dfaminimization.ui

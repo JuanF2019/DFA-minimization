@@ -10,28 +10,33 @@ import com.example.dfaminimization.model.transitions.Transition;
 
 import java.util.*;
 
+/**
+ * Class that holds the method for the minimization algorithm
+ */
 public class Minimizer {
 
+    /**
+     * Minimizes a given mealy or moore machine.
+     * Algorithm works on 3 steps:
+     * <p>
+     * 1) Removal of inaccesible states.
+     * 2) Removal of redundant states.
+     * 3) Reconstruction of the machine.
+     *
+     * @param machine The machine to be minimized
+     * @return The minimized machine
+     */
     public static Machine minimize (Machine machine) {
-
-        System.out.println("Check 0");
-
         removeInaccessibleStates(machine);
-
-        System.out.println("Check 1");
-
         Set<Group> partition = mergeRedundantStates(machine);
-
-        System.out.println("Check 2");
-
-        Machine minimizedMachine = reconstructMachine(machine, partition);
-
-        System.out.println("Check 3");
-
-        return minimizedMachine;
+        return reconstructMachine(machine, partition);
     }
 
-    //Checks for inaccessible states from the start state using the BFS algorithm to traverse the machine
+    /**
+     * Removes the inaccessible states of a machine.
+     * Checks for inaccessible states from the start state using the BFS algorithm to traverse the machine
+     * @param machine The machine being minimized
+     */
     private static void removeInaccessibleStates(Machine machine){
 
         State startState = machine.startState;
@@ -64,6 +69,14 @@ public class Minimizer {
         machine.states = new HashSet<>(visitedStates.values());
     }
 
+    /**
+     * Returns the first partition required for the second step in the minimization algorithm.
+     * Works by grouping states as follows.
+     * Moore: Two states are in the same group if they have the same output
+     * Mealy: Two states are in the same group if they have the same output for all transitions
+     * @param machine machine being minimized
+     * @return A set that contains groups, representing the first partition.
+     */
     private static Set<Group> initialPartition(Machine machine){
 
         Set<State> machineStates = machine.states;
@@ -169,6 +182,12 @@ public class Minimizer {
         return groupsK;
     }
 
+    /**
+     * Checks if two partitions are equal checking that a group in the first partition is also in the second one.
+     * @param groupsK The first partition (Pk)
+     * @param groupsKPlusOne The second partition (Pk+1)
+     * @return True of both partitions are equal, False if they are different
+     */
     private static boolean partitionsAreEqual(Set<Group> groupsK, Set<Group> groupsKPlusOne){
 
         boolean partitionsAreEqual = true;
@@ -187,6 +206,13 @@ public class Minimizer {
         return partitionsAreEqual;
     }
 
+    /**
+     * Checks if a group is in a partition. Checks that each state from the group is in at least
+     * one group of the same size in the partition being checked;
+     * @param group Group
+     * @param partition Partition
+     * @return True if the group is on the partition. False if th group is not on the partition
+     */
     private static boolean groupIsInPartition (Group group, Set<Group> partition){
 
         boolean foundGroup = true;
@@ -215,6 +241,19 @@ public class Minimizer {
         return foundGroup;
     }
 
+    /**
+     * Groups equivalent "redundant" states base on the following.
+     * Starting from the initial partition P1:
+     * Two states are on the same group of P2 if all of their transitions lead to the same
+     * groups of P1, for each input symbol.
+     * <p>
+     * Is generalized to Pk and Pk+1
+     * Two states are on the same group of Pk+1 if all of their transitions lead to the same
+     * groups of Pk, for each input symbol.
+     *
+     * @param machine machine being minimized
+     * @return Partition with the states grouped if they are equivalent
+     */
     private static Set<Group> mergeRedundantStates(Machine machine) {
 
         Set<Group> groupsKPlusOne = initialPartition(machine);
@@ -304,6 +343,18 @@ public class Minimizer {
         return groupsKPlusOne;
     }
 
+    /**
+     * Creates a new machine, that is equivalent to the machine and is minimal.
+     * Rebuilds the machine as follows:
+     * 1) Each group in the partition is a new state
+     * 2) The group with the start state is the new start state
+     * 3) Transitions are taken from the original machine checking only one state in each group.
+     * The next states are the groups that contain the original state the transition lead to.
+     *
+     * @param machine Machine being minimized
+     * @param partition Final partition after grouping equal states
+     * @return Minimized machine
+     */
     static Machine reconstructMachine(Machine machine, Set<Group> partition){
 
         char idCounter = 65;
@@ -398,6 +449,11 @@ public class Minimizer {
         return minimizedMachine;
     }
 
+    /**
+     * Constructs a new State name for the minimized machine, based on a group.
+     * @param group Group in the final partition
+     * @return The group name that contains a String representation of the group. Ex {A,D,E}
+     */
     private static String constructNewStateName(Group group){
 
         StringBuilder builder = new StringBuilder("{");

@@ -1,5 +1,12 @@
 # DFA-minimization
 
+Note for project execution is recommended to open the project with IntelliJ Idea
+
+Versions used:
+- Java 17
+- JavaFX (Openjfx) 17
+- Scene Builder 19.0.0
+
 ## Vistazo general de la aplicación
 
 <img src="imgs/global-view.jpg" alt="global ui image" width = "650%" height="65%">

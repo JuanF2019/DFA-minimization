@@ -91,7 +91,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Button>
-            <Button fx:id="createMachineButton" mnemonicParsing="false" onAction="#onCreateMachineButtonClick" style="-fx-background-color: #17a2b8;" text="Create Machine" textFill="WHITE">
+            <Button fx:id="createMachineButton" disable="true" mnemonicParsing="false" onAction="#onCreateMachineButtonClick" style="-fx-background-color: #17a2b8;" text="Create Machine" textFill="WHITE">
                <HBox.margin>
                   <Insets />
                </HBox.margin>

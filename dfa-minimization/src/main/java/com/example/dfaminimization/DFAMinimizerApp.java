@@ -7,6 +7,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Contains the  main method and extends the Application class, required for JavaFX
+ */
 public class DFAMinimizerApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {

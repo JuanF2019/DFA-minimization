@@ -24,7 +24,7 @@ public class RawMealyState extends RawState{
     }
 
     /**
-     * Intializes the combobox for the outputs given an input symbol
+     * Initializes the combobox for the outputs given an input symbol
      * @param inputSymbol Input symbol
      * @param outputAlphabet Output alphabet of the machine
      */
@@ -32,6 +32,7 @@ public class RawMealyState extends RawState{
 
         ComboBox<String> selector = new ComboBox<>();
         selector.getItems().addAll(outputAlphabet);
+        selector.setValue(selector.getItems().get(0));
         this.outputs.put(inputSymbol, selector);
 
     }

@@ -40,7 +40,9 @@ public abstract class RawState {
      * @param states List of states
      */
     public void addEmptyTransitionWithOptions(String inputSymbol, ObservableList<RawState> states){
-        transitions.put(inputSymbol, new ComboBox<>(states));
+        ComboBox<RawState> stateOptions = new ComboBox<>(states);
+        stateOptions.setValue(null);
+        transitions.put(inputSymbol, stateOptions);
     }
 
     /**

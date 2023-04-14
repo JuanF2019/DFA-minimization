@@ -37,6 +37,9 @@ public class RawMooreState extends RawState{
      * Initializes de output combobox
      * @param outputAlphabet Output alphabet of the machine, as specified by the user
      */
-    public void addOutputOptions(String[] outputAlphabet){ output.getItems().addAll(outputAlphabet); }
+    public void addOutputOptions(String[] outputAlphabet){
+        output.getItems().addAll(outputAlphabet);
+        output.setValue(output.getItems().get(0));
+    }
 
 }

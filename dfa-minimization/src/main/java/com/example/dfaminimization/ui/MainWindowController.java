@@ -19,20 +19,30 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.*;
 
+/**
+ * User interface controller class
+ */
 public class MainWindowController {
 
-    Machine originalMachine;
-
-    String[] inputAlphabet;
-
-    String[] outputAlphabet;
-
+    /**
+     * Reference to the minimized machine
+     */
     Machine minimizedMachine;
 
-    public void initialize(){
+    /**
+     * Reference to the original machine
+     */
+    Machine originalMachine;
 
+    /**
+     * Machine input alphabet
+     */
+    String[] inputAlphabet;
 
-    }
+    /**
+     * Machine output alphabet
+     */
+    String[] outputAlphabet;
 
     @FXML
     private Button clearButton;
@@ -55,7 +65,6 @@ public class MainWindowController {
     @FXML
     private RadioButton mealyRadioButton;
 
-
     @FXML
     private TableView<State> minimizedMachineTable;
 
@@ -77,6 +86,22 @@ public class MainWindowController {
      */
     @FXML
     void onClearButtonClick(ActionEvent event) {
+
+        originalMachineTable.getItems().clear();
+        originalMachineTable.getColumns().clear();
+
+        minimizedMachineTable.getItems().clear();
+        minimizedMachineTable.getColumns().clear();
+
+        inputAlphabetTextField.setText("");
+        outputAlphabetTextField.setText("");
+        numberOfStatesTextField.setText("");
+
+        minimizeButton.setDisable(true);
+        createMachineButton.setDisable(true);
+
+        originalMachine = null;
+        minimizedMachine = null;
     }
 
     /**
@@ -175,6 +200,26 @@ public class MainWindowController {
     }
 
     /**
+     * Shows alert when the number of states has the wrong number format
+     */
+    void showNumberOfStatesAlert(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Error");
+        alert.setContentText("Error processing number of states, please verify is a integer and positive number");
+        alert.showAndWait();
+    }
+
+    /**
+     * Shows alert when alphabets have the wrong format
+     */
+    void showAlphabetAlert(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Error");
+        alert.setContentText("Error processing input or output alphabet, \n please verify they are in the following format: \n (characters separated by commas): \n Example: A,D,0,1");
+        alert.showAndWait();
+
+    }
+    /**
      * Initializes the table representing the original machine given the user inputs. (Input and output alphabets, number of states, machine type)
      * @param event the save button click event
      */
@@ -184,10 +229,25 @@ public class MainWindowController {
         originalMachineTable.getColumns().clear();
         originalMachineTable.getItems().clear();
 
-        //Obtain machine information from user
+        //Obtain machine information from user, verifies format
+
+        //Matches a positive, integer number (digit followed by n digits)
+        if(!numberOfStatesTextField.getText().matches("^[1-9]\\d*$")){
+            showNumberOfStatesAlert();
+            return;
+        }
+
+        //Matches a string like: "0,d,3,5" and not "00,d,23,"
+        if (!inputAlphabetTextField.getText().matches("^[a-zA-Z0-9](,[a-zA-Z0-9])*$") ||
+                !outputAlphabetTextField.getText().matches("^[a-zA-Z0-9](,[a-zA-Z0-9])*$")){
+            showAlphabetAlert();
+            return;
+        }
 
         int numberOfStates = Integer.parseInt(numberOfStatesTextField.getText());
+
         inputAlphabet = inputAlphabetTextField.getText().split(",");
+
         outputAlphabet = outputAlphabetTextField.getText().split(",");
 
         //Create list of raw states, that contain the information of each state in the machine
@@ -203,13 +263,19 @@ public class MainWindowController {
             );
         }
 
+        rawStates.add(null);
+
         originalMachineTable.setItems(rawStates);
 
         //Initializes the combo boxes for each state and input value
         //And initializes the combo boxes for the outputs
         //Combo boxes serve as selectors for nextStates and output in transitions/states
 
-        for(RawState rawState: rawStates){
+        for(int i = 0 ; i < rawStates.size() ; i ++){
+
+            RawState rawState = rawStates.get(i);
+            if(rawState == null) continue;
+
             for(String inputSymbol : inputAlphabet){
                 rawState.addEmptyTransitionWithOptions(inputSymbol, rawStates);
 
@@ -236,7 +302,18 @@ public class MainWindowController {
                 int finalI = i;
 
                 newInputSymbolColumn.setCellValueFactory(cellDataFeatures -> {
-                    ComboBox<RawState> selector = cellDataFeatures.getValue().getTransitions().get(inputAlphabet[finalI]);
+
+                    RawState state = cellDataFeatures.getValue();
+                    ComboBox<RawState> selector;
+                    if(state == null){
+                        selector = new ComboBox<>();
+                        selector.setDisable(true);
+                        return new SimpleObjectProperty<>(selector);
+                    }
+                    else{
+                        selector = state.getTransitions().get(inputAlphabet[finalI]);
+                    }
+
                     return new SimpleObjectProperty<>(selector);
                 } );
 
@@ -247,12 +324,20 @@ public class MainWindowController {
             TableColumn<RawState, ComboBox<String>> outputColumn = new TableColumn<>("Output");
 
             outputColumn.setCellValueFactory(cellDataFeatures -> {
+
                 RawMooreState state = (RawMooreState) cellDataFeatures.getValue();
-                return new SimpleObjectProperty<>(state.getOutput());
+                ComboBox<String> selector;
+
+                if(state == null){
+                    selector = new ComboBox<>();
+                    selector.setDisable(true);
+                    return new SimpleObjectProperty<>(selector);
+                }
+                else{
+                    return new SimpleObjectProperty<>(state.getOutput());
+                }
             });
-
             originalMachineTable.getColumns().add(outputColumn);
-
         }
         else{
 
@@ -263,22 +348,44 @@ public class MainWindowController {
                 int finalI = i;
 
                 newInputSymbolColumn.setCellValueFactory(cellDataFeatures -> {
-                    ComboBox<RawState> selector = cellDataFeatures.getValue().getTransitions().get(inputAlphabet[finalI]);
+                    RawState state = cellDataFeatures.getValue();
+                    ComboBox<RawState> selector;
+                    if(state == null){
+                        selector = new ComboBox<>();
+                        selector.setDisable(true);
+                        return new SimpleObjectProperty<>(selector);
+                    }
+                    else{
+                        selector = state.getTransitions().get(inputAlphabet[finalI]);
+                    }
+
                     return new SimpleObjectProperty<>(selector);
                 } );
 
                 TableColumn<RawState,ComboBox<String>> newInputSymbolOutputColumn = new TableColumn<>(inputAlphabet[i]+"-output");
 
                 newInputSymbolOutputColumn.setCellValueFactory(cellDataFeatures -> {
+
                     RawMealyState mealyState = (RawMealyState) cellDataFeatures.getValue();
-                    ComboBox<String> selector = mealyState.getOutputs().get(inputAlphabet[finalI]);
+
+                    ComboBox<String> selector;
+
+                    if(mealyState == null){
+                        selector = new ComboBox<>();
+                        selector.setDisable(true);
+                        return new SimpleObjectProperty<>(selector);
+                    }
+                    else{
+                        selector = mealyState.getOutputs().get(inputAlphabet[finalI]);;
+                    }
+
                     return new SimpleObjectProperty<>(selector);
                 } );
 
                 originalMachineTable.getColumns().addAll(newInputSymbolColumn,newInputSymbolOutputColumn);
-
             }
         }
+        createMachineButton.setDisable(false);
     }
 
     /**
@@ -286,11 +393,10 @@ public class MainWindowController {
      * And converts it to an instance of the corresponding type of Machine @param event
      * @param event The create machine button click event
      */
-
     @FXML
     void onCreateMachineButtonClick(ActionEvent event) {
 
-        this.minimizeButton.setDisable(false);
+
         //Assumes the original table view items list is filled
 
         ObservableList<RawState> rawStates = originalMachineTable.getItems();
@@ -304,6 +410,7 @@ public class MainWindowController {
             MooreMachine mooreMachine = (MooreMachine) originalMachine;
 
             for(RawState state : rawStates){
+                if(state == null) continue;
                 RawMooreState mooreState = (RawMooreState) state;
                 if(state.getName().equals("A")){
                     mooreMachine.addStartState("A",mooreState.getOutput().getValue(),state.getName());
@@ -313,6 +420,7 @@ public class MainWindowController {
             }
 
             for(RawState state : rawStates){
+                if(state == null) continue;
                 for(String inputSymbol : inputAlphabet){
 
                     RawState nextRawState = state.getTransitions().get(inputSymbol).getValue();
@@ -330,6 +438,7 @@ public class MainWindowController {
             MealyMachine mealyMachine = (MealyMachine) originalMachine;
 
             for(RawState state : rawStates){
+                if(state==null) continue;
                 RawMealyState mealyState = (RawMealyState) state;
                 if(state.getName().equals("A")){
                     mealyMachine.addStartState("A",state.getName());
@@ -339,6 +448,7 @@ public class MainWindowController {
             }
 
             for(RawState state : rawStates){
+                if(state==null) continue;
                 for(String inputSymbol : inputAlphabet){
 
                     RawMealyState mealyState = (RawMealyState) state;
@@ -347,11 +457,28 @@ public class MainWindowController {
 
                     String transitionOutput = mealyState.getOutputs().get(inputSymbol).getValue();
 
-                    if(nextRawState != null){
-                        mealyMachine.addTransition(inputSymbol, state.getName(), nextRawState.getName(),transitionOutput);
+                    if(nextRawState == null){
+                        showIncompleteMealyMachineAlert();
+                        this.originalMachine = null;
+                        return;
                     }
+
+                    mealyMachine.addTransition(inputSymbol, state.getName(), nextRawState.getName(),transitionOutput);
+
                 }
             }
         }
+
+        this.minimizeButton.setDisable(false);
+    }
+
+    /**
+     * Show alert for incomplete mealy machine
+     */
+    void showIncompleteMealyMachineAlert() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Error");
+        alert.setContentText("A state must be defined for all transitions");
+        alert.showAndWait();
     }
 }

@@ -1,6 +1,6 @@
 # DFA-minimization
 
-Note for project execution is recommended to open the project with IntelliJ Idea
+Note for project execution is recommended to open the project with IntelliJ Idea or execute the jar file located on dfa-minimization/executable
 
 Versions used:
 - Java 17

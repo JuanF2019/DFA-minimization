@@ -1,0 +1,17 @@
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\com\example\dfaminimization\model\DFA\Machine.java
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\com\example\dfaminimization\model\transitions\Transition.java
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\com\example\dfaminimization\model\DFAminimizer\Group.java
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\com\example\dfaminimization\model\states\State.java
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\com\example\dfaminimization\model\transitions\MooreTransition.java
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\com\example\dfaminimization\model\transitions\MealyTransition.java
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\com\example\dfaminimization\model\states\MealyState.java
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\com\example\dfaminimization\ui\MainWindowController.java
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\com\example\dfaminimization\ui\RawMealyState.java
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\com\example\dfaminimization\model\DFA\MealyMachine.java
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\com\example\dfaminimization\model\DFAminimizer\Minimizer.java
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\com\example\dfaminimization\model\DFA\MooreMachine.java
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\com\example\dfaminimization\model\states\MooreState.java
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\module-info.java
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\com\example\dfaminimization\ui\RawMooreState.java
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\com\example\dfaminimization\ui\RawState.java
+C:\Users\juanf\Desktop\DFA-minimization\dfa-minimization\src\main\java\com\example\dfaminimization\DFAMinimizerApp.java

@@ -1,0 +1,17 @@
+com\example\dfaminimization\model\DFAminimizer\Minimizer.class
+com\example\dfaminimization\model\DFA\Machine.class
+com\example\dfaminimization\model\states\MealyState.class
+com\example\dfaminimization\model\transitions\Transition.class
+com\example\dfaminimization\ui\RawState.class
+com\example\dfaminimization\model\DFA\MooreMachine.class
+com\example\dfaminimization\model\transitions\MooreTransition.class
+com\example\dfaminimization\model\DFAminimizer\Group.class
+com\example\dfaminimization\model\DFA\MealyMachine.class
+module-info.class
+com\example\dfaminimization\ui\RawMooreState.class
+com\example\dfaminimization\DFAMinimizerApp.class
+com\example\dfaminimization\model\states\State.class
+com\example\dfaminimization\model\transitions\MealyTransition.class
+com\example\dfaminimization\model\states\MooreState.class
+com\example\dfaminimization\ui\MainWindowController.class
+com\example\dfaminimization\ui\RawMealyState.class
